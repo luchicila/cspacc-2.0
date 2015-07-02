@@ -1,4 +1,4 @@
-function [ca, cb, n, nt, dt, col_pt] = load_tracks_colliding()
+function [ca, cb, n, nt, dt, col_pt, dpath, file_name] = load_tracks_colliding()
 % Input user to select a file with the data and tehn load tracks of colliding 
 % cells from .csv file. Tracks file needs to be structured as the corresponding 
 % tracks-template.xlsx.
@@ -9,7 +9,8 @@ function [ca, cb, n, nt, dt, col_pt] = load_tracks_colliding()
 %   nt = maximum track length (number of frames).
 %   dt = interval between timepoints (seconds).
 %   col_pt = collision time point.
-% Note that zeros are going to be replaced with NaN values. 
+%   dpath = string with the path to the .csv file with the tracks.
+%   file_name = string with the name of the tracks file used to load data.
 %
 % Author: A. Luchici, 2015
 
@@ -23,7 +24,7 @@ dt = tmp(3); % interval between frames (seconds)
 col_pt = tmp(4); % collision time point
 clear tmp
 
-tracks_data = csvread(fullfile(dpath, tcell_file), 4, 0); % read .csv file
+tracks_data = csvread(fullfile(dpath, file_name), 4, 0); % read .csv file
 
 % Initialize output
 ca = zeros(nt, 9, n);
@@ -34,7 +35,3 @@ for i = 1:n
     ca(:,1:3,i) = tracks_data(:,6*(i-1)+1:6*(i-1)+3);
     cb(:,1:3,i) = tracks_data(:,6*(i-1)+4:6*(i-1)+6);
 end
-
-% Replace 0 values (i.e. missing data) by nan
-ca(ca == 0) = nan;
-cb(cb == 0) = nan;
