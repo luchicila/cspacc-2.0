@@ -1,13 +1,14 @@
-function [ca, cb, n, nt, col_pt] = load_tracks_colliding()
+function [ca, cb, n, nt, dt, col_pt] = load_tracks_colliding()
 % Input user to select a file with the data and tehn load tracks of colliding 
 % cells from .csv file. Tracks file needs to be structured as the corresponding 
 % tracks-template.xlsx.
 % Output:
 %   ca = nt x 9 x n matrix with the (x, y, z) coordinates of cell A.
 %   cb = nt x 9 x n matrix with the (x, y, z) coordiantes of cell B.
-%   n = number of cell pairs
-%   nt = maximum track length (number of frames)
-%   col_pt = collision time point
+%   n = number of cell pairs.
+%   nt = maximum track length (number of frames).
+%   dt = interval between timepoints (seconds).
+%   col_pt = collision time point.
 % Note that zeros are going to be replaced with NaN values. 
 %
 % Author: A. Luchici, 2015
@@ -15,10 +16,11 @@ function [ca, cb, n, nt, col_pt] = load_tracks_colliding()
 [file_name, dpath] = uigetfile('.csv'); % ask user to select .csv data file
 
 % Extract number of pairs & number of frames
-tmp = csvread(fullfile(dpath, file_name), 0, 0, 'A1..C1');
+tmp = csvread(fullfile(dpath, file_name), 0, 0, 'A1..D1');
 n = tmp(1); % number of cell pairs
 nt = tmp(2); % maximum track length
-col_pt = tmp(3); % collision time point
+dt = tmp(3); % interval between frames (seconds)
+col_pt = tmp(4); % collision time point
 clear tmp
 
 tracks_data = csvread(fullfile(dpath, tcell_file), 4, 0); % read .csv file
