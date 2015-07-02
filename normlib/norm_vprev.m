@@ -1,6 +1,7 @@
 function ca_norm = norm_vprev(ca, n, nt, dt)
-% Compute velocity and acceleration data normalized to the direction of the
-% previous velocity, i.e. the unit vector of the velocity at t-1. 
+% CA_NORM = NORM_VPREV(CA, N, NT, DT). Compute velocity and acceleration data 
+% normalized to the direction of the previous velocity, i.e. the unit vector of 
+% the velocity at t-1. 
 % Input:
 %   ca = nt x 9 x n matrix with the (x, y, z) coordinates of the cells.
 %   n = number of cells.
@@ -53,7 +54,7 @@ for i = 1:n
               0, 1, 0, 0; ...
              -sin(thetaz), 0, cos(thetaz), 0; ...
               0, 0, 0, 1];
-        A13 = Ry * A13;
+        A13 = Ry * A12;
         
         % Compute normalised velocity and acceleration
         % Cell coordinates at k+1 in homogenenous coordinates.
@@ -71,7 +72,7 @@ for i = 1:n
    
         % Compute normalised acceleration between (k-1) and (k+1) in
         % microns per minute^2
-        ca_norm(k,7:9,i) = [A22(1:3) - A0(1:3)]' / (dt^2) * (60^2); 
+        ca_norm(k,7:9,i) = [A22(1:3)]' / (dt^2) * (60^2); 
         
         % Compute normalised velocity between k and (k+1) in microns per
         % minute.

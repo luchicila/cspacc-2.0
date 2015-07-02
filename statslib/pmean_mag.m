@@ -1,5 +1,6 @@
 function vmean = pmean_mag(vec, n, nt)
-% Compute mean magnitude of a sample of vectors recorded at discrete intervals.
+% VMEAN = PMEAN_MAG(VEC, N, NT). Compute mean magnitude of a sample of vectors 
+% recorded at discrete intervals.
 % Input:
 %   vec = [nt x 3 x n] matrix with the (x,y,z) components of the vecotors. 
 %   n = number of vectors in the sample.
