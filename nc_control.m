@@ -13,6 +13,7 @@ addpath(fullfile(pwd, 'statslib'));
 
 % Load data
 [ctrl_ca, n, nt, dt, dpath, fname] = load_tracks_single();
+dpath = dpath(1:end-12);
 
 % Extract data at 1 minute time intervals
 new_res = 6;
@@ -72,12 +73,12 @@ ctrl_pval_acc = ttest_components(ctrl_ca1_norm(:,7:9,:), nt1, ...
 
 %% Visualisation 
 % Initialize plot properties 
-plot_prop.axis_size = [-5 5 -5 5 -5 5];
+plot_prop.axis_size = [-8 8 -8 8 -8 8];
 plot_prop.imres = '-r300';
 plot_prop.dimensions = 2;
 
 % Initialize path where to save velocity vectors 
-path2results = fullfile(dpath, 'analysis-2015-07-02','norm-vprev-60s', ...
+path2results = fullfile(dpath, 'analysis-2015-07-03','norm-vprev-60s', ...
     'velocity');
 mkdir(path2results);
 
@@ -85,42 +86,42 @@ mkdir(path2results);
 plot_single_vectors(ctrl_ca1_norm(:,4:6,:), n, nt1, plot_prop, path2results);
 
 % Initialize path where to save acceleration vectors
-path2results = fullfile(dpath, 'analysis-2015-07-02', 'norm-vprev-60s', ...
+path2results = fullfile(dpath, 'analysis-2015-07-03', 'norm-vprev-60s', ...
     'acceleration');
 mkdir(path2results);
 
 % Plot acceleration vectors
 plot_single_vectors(ctrl_ca1_norm(:,7:9,:), n, nt1, plot_prop, path2results);
 
-% Initialize plot properties for time series.
-plot_prop.col = 'b';
-plot_prop.width = 1.2;
-plot_prop.axis_size = [0 nt1+1 0 max(ctrl_vmag)+0.5];
-plot_prop.imres = '-r300';
-path2results = fullfile(dpath, 'analysis-2015-07-02', 'norm-vprev-60s');
+%% Save data
+% Velocity
+path2results = fullfile(dpath, 'analysis-2015-07-03', 'norm-vprev-60s');
+file_name = 'velocity.csv';
+save_data(ctrl_ca1_norm(:,4:6,:), path2results, file_name);
 
-% Plot speed time series
-file_name = 'mean-speed-ts.png';
-plot_ts(ctrl_vmag, 1:nt1, plot_prop, path2results, file_name);
+% Velocity stats
+M = [ctrl_vmag, ctrl_vmag_var, ctrl_vdir_stats];
+file_name = 'velocity-stats.csv';
+save_data(M, path2results, file_name);
 
-% Plot speed variance
-file_name = 'var-speed-ts.png';
-plot_ts(ctrl_vmag_var, 1:nt1, plot_prop, path2results, file_name);
+% Velocity PDFs
+clear M
+M = [ctrl_x_speed', ctrl_pdf_speed', ctrl_x_speed_theta', ctrl_pdf_speed_theta'];
+file_name = 'velocity-pdfs.csv';
+save_data(M, path2results, file_name);
 
-% Plot speed distribution 
-plot_prop.axis_size = [0 max(ctrl_x_speed) 0 0.7];
-file_name = 'speed-pdf.png';
-plot_dist(ctrl_pdf_speed, ctrl_x_speed, plot_prop, path2results, file_name);
+% Acceleration
+file_name = 'acceleration.csv';
+save_data(ctrl_ca1_norm(:,7:9,:), path2results, file_name);
 
-% Plot mean acceleration time series
-file_name = 'mean-acceleration-magnitude-ts.png';
-plot_ts(ctrl_amag, 1:nt1, plot_prop, path2results, file_name);
+% Acceleration stats
+clear M
+M = [ctrl_amag, ctrl_amag_var, ctrl_adir_stats];
+file_name = 'acceleration-stats.csv';
+save_data(M, path2results, file_name);
 
-% Plot acceleration magnitude variance
-file_name = 'var-acceleration-magnitude-ts.png';
-plot_ts(ctrl_amag_var, 1:nt1, plot_prop, path2results, file_name);
-
-% Plot acceleration distribution 
-file_name = 'acceleration-magnitude-pdf.png';
-plot_dist(ctrl_pdf_speed, ctrl_x_speed, plot_prop, path2results, file_name);
-
+% Acceleration PDFs
+clear M 
+M = [ctrl_x_acc', ctrl_pdf_acc', ctrl_x_acc_theta', ctrl_pdf_acc_theta'];
+file_name = 'acceleration-pdfs.csv';
+save_data(M, path2results, file_name);

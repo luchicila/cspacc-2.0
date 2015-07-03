@@ -49,7 +49,7 @@ for j = 1:nt-1
     q = quiver3(zeros(1,1,n), zeros(1,1,n), zeros(1,1,n), ...
                v(j,1,:), v(j,2,:), v(j,3,:), 'k');
     q.AutoScale = 'off';
-    q.LineWidth = 1.5;
+    q.LineWidth = 1.2;
     drawnow;
     axis tight
     axis equal
