@@ -1,9 +1,10 @@
-function [pdist_theta, x_theta, pdist_phi, x_phi] = pdf_dir(vec, n, nt)
+function [pdist_theta, x_theta, pdist_phi, x_phi] = pdf_dir(vec, n, nt, nbins)
 % Estimate the probability density function for vector directions. 
 % Input:
 %   vec = [nt x 3 x n] matrix with the (x, y, z) components of the vectors.
 %   n = number of vectors in the sample.
 %   nt = maximum number of time points.
+%   nbins = number of points used for evaluating the PDF.
 %
 % Output:
 %   pdist_theta = [nt x n, 1] vector with the probability density function
@@ -33,8 +34,8 @@ pd_phi = fitdist(phi, 'Kernel', 'Kernel', 'epanechnikov');
 
 % Compute distribution values for evenly spaced magnitudes between 0 and
 % maximum recorded magnitude + 10% more.
-x_theta = linspace(min(theta)-0.1*min(theta),max(theta)+0.1*max(theta),100);
+x_theta = linspace(min(theta)-0.1*min(theta),max(theta)+0.1*max(theta), nbins);
 pdist_theta = pdf(pd_theta, x_theta);
 
-x_phi = linspace(min(phi)-0.1*min(phi), max(phi)+0.1*max(phi),100);
+x_phi = linspace(min(phi)-0.1*min(phi), max(phi)+0.1*max(phi), nbins);
 pdist_phi = pdf(pd_phi, x_phi);

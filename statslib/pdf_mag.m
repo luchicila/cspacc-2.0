@@ -1,9 +1,11 @@
 function [pdist_mag, vmag] = pdf_mag(vec, n, nt, nbins)
+% [pdist_mag, vmag] = pdf_mag(vec, n, nt, nbins). 
 % Estimate the probability density function for the vectors magnitude. 
 % Input:
 %   vec = [nt x 3 x n] matrix with the (x, y, z) components of the vectors.
 %   n = number of vectors in the sample.
 %   nt = maximum number of time points.
+%   nbins = number of points used for evaluating the PDF.
 %
 % Output:
 %   pdist_mag = [nt x n, 1] vector with the probability density function
@@ -22,5 +24,5 @@ pd = fitdist(vec_mag, 'Kernel', 'Kernel', 'epanechnikov');
 
 % Compute distribution values for evenly spaced magnitudes between 0 and
 % maximum recorded magnitude + 10% more.
-vmag = linspace(0,max(vec_mag)+0.1*max(vec_mag),nbins);
+vmag = linspace(0, max(vec_mag)+0.1*max(vec_mag), nbins);
 pdist_mag = pdf(pd, vmag);

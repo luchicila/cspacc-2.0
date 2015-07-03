@@ -1,5 +1,5 @@
 function plot_ts(ts_data, x, plot_prop, path2results, file_name)
-% PLOT_TS(TS_DATA, X, PLOT_PROP, PATH2RESULTS, FILE_NAME). Plot time series. 
+% plot_ts(ts_data, x, plot_prop, path2results, file_name). Plot time series. 
 % Input:
 %   ts_data = [n x 1] vector with the time-series.
 %   x = [n x 1] vector with the points at which the time-series is evaluated.

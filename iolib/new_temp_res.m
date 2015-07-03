@@ -1,4 +1,5 @@
 function [ca_new, nt1] = new_temp_res(ca, n, nt, dt, origin, new_origin)
+% [ca_new, nt1] = new_temp_res(ca, n, nt, dt, origin, new_origin).
 % Change temporal resolution by selecting data points every dt number of
 % frames surrounding a user specified origin. 
 % Input:

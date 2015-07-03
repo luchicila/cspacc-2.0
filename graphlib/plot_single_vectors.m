@@ -1,4 +1,5 @@
 function plot_single_vectors(v, n, nt, plot_prop, path2results)
+% plot_single_vectors(v, n, nt, plot_prop, path2results).
 % Display vectors and save images to file.
 % Input:
 %   v = [nt x 3 x n] matrix containing the (x,y,z) coordinates of the
@@ -27,7 +28,7 @@ set(0, 'DefaultTextFontSize', 14)
 set(0, 'DefaultTextFontWeight', 'Bold')
 figure('visible', 'on');
 
-if ~exists(path2results)
+if ~exist(path2results, 'dir')
     mkdir(path2results)
 end
 
@@ -45,10 +46,10 @@ for j = 1:nt-1
             plot_prop.axis_size(4)-.15, ...
             plot_prop.axis_size(4) - .2], 'k');
     end
-    q = quiver(zeros(1,1,n), zeros(1,1,n), zeros(1,1,n), ...
-               v(j,3,:), v(j,4,:), v(j,5,:), 'k');
+    q = quiver3(zeros(1,1,n), zeros(1,1,n), zeros(1,1,n), ...
+               v(j,1,:), v(j,2,:), v(j,3,:), 'k');
     q.AutoScale = 'off';
-    q.LineWidth = 2;
+    q.LineWidth = 1.5;
     drawnow;
     axis tight
     axis equal

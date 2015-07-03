@@ -1,5 +1,6 @@
 function plot_dist(pdf_data, x, plot_prop, path2results, file_name)
-% Graph with PDF of a sample distribution.
+% plot_dist(pdf_data, x, plot_prop, path2results, file_name). Plot with PDF of 
+% the sample distribution.
 % Input:
 %   pdf_data = [n x 1] vector with the PDF.
 %   x = [n x 1] vector with the points at which the PDF is evaluated.
@@ -29,8 +30,8 @@ set(0, 'DefaultTextFontWeight', 'Bold')
 % Plot graph
 plot(x, pdf_data, 'Color', plot_prop.col, 'LineWidth', plot_prop.width);
 axis tight
-axis equal
-axis(plot_prop.axis_size); 
+set(gca, 'XLim', plot_prop.axis_size(1:2)); 
+set(gca, 'YLim', plot_prop.axis_size(3:4));
 
 % Save image to file
 % Create folder where to store the image

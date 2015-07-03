@@ -1,5 +1,5 @@
 function ca_norm = norm_vprev(ca, n, nt, dt)
-% CA_NORM = NORM_VPREV(CA, N, NT, DT). Compute velocity and acceleration data 
+% ca_norm = NORM_VPREV(ca, n, nt, dt). Compute velocity and acceleration data 
 % normalized to the direction of the previous velocity, i.e. the unit vector of 
 % the velocity at t-1. 
 % Input:
