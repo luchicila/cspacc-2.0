@@ -1,4 +1,5 @@
 function [ca, n, nt, dt, dpath, file_name] = load_tracks_single()
+% [ca, n, nt, dt, dpath, file_name] = load_tracks_single().
 % Input user to select a file with the data and tehn load tracks of colliding 
 % cells from .csv file. Tracks file needs to be structured as the corresponding 
 % tracks-template.xlsx.

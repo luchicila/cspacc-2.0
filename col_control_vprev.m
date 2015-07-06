@@ -1,4 +1,4 @@
-% Script for analysing velocity and acceleration of non-colliding control
+% Script for analysing velocity and acceleration of colliding control
 % hemocytes. Note that as there is no other reference, the normalisation used is
 % with respect to the previous direction of travel.
 %
@@ -12,50 +12,61 @@ addpath(fullfile(pwd, 'normlib'));
 addpath(fullfile(pwd, 'statslib'));
 
 % Load data
-[ctrl_ca, n, nt, dt, dpath, fname] = load_tracks_single();
-[dia5_ca, n, nt, dt, dpath
+[ca, cb, n, nt, dt, col_pt, dpath, ~] = load_tracks_colliding();
 dpath = dpath(1:end-12);
 
 % Extract data at 1 minute time intervals
 new_res = 6;
 dt = dt * new_res;
-org = 1;
-new_org = 1;
+org = col_pt;
+new_org = length(-240:60:0);
 [ctrl_ca1, nt1] = new_temp_res(ctrl_ca, n, nt, new_res, org, new_org);
+[ctrl_cb1, ~] = new_temp_res(ctrl_cb, n, nt, new_res, org, new_org);
 
 % Normalise with respect to the previous direction of travel.
 ctrl_ca1_norm = norm_vprev(ctrl_ca1, n, nt1, dt);
+ctrl_cb1_norm = norm_vprev(ctrl_cb1, n, nt1, dt);
 
 %% Global descriptors 
 % PDF speed
 nbins = 50;
-[ctrl_pdf_speed, ctrl_x_speed] = pdf_mag(ctrl_ca1_norm(:,4:6,:), n, nt1, nbins);
+[ctrl_ca1_pdf_speed, ctrl_ca1_x_speed] = pdf_mag(ctrl_ca1_norm(:,4:6,:), n, ...
+    nt1, nbins);
+[ctrl_cb1_pdf_speed, ctrl_cb1_x_speed] = pdf_mag(ctrl_cb1_norm(:,4:6,:), n, ...
+    nt1, nbins);
 
 % PDF direction
-[ctrl_pdf_speed_theta, ctrl_x_speed_theta, ~, ~] = ...
+[ctrl_ca1_pdf_speed_theta, ctrl_ca1_x_speed_theta, ~, ~] = ...
     pdf_dir(ctrl_ca1_norm(:,4:6,:), n, nt1, nbins);
+[ctrl_cb1_pdf_speed_theta, ctrl_cb1_x_speed_theta, ~, ~] = ...
+    pdf_dir(ctrl_cb1_norm(:,4:6,:), n, nt1, nbins);
 
 % PDF acceleration magnitude
-[ctrl_pdf_acc, ctrl_x_acc] = pdf_mag(ctrl_ca1_norm(:,7:9,:), n, nt1, nbins);
+[ctrl_ca1_pdf_acc, ctrl_ca1_x_acc] = pdf_mag(ctrl_ca1_norm(:,7:9,:), n, nt1, ...
+    nbins);
+[ctrl_cb1_pdf_acc, ctrl_cb1_x_acc] = pdf_mag(ctrl_cb1_norm(:,7:9,:), n, nt1, ...
+    nbins);
 
 % PDF acceleration direction
-[ctrl_pdf_acc_theta, ctrl_x_acc_theta, ~, ~] = ...
+[ctrl_ca1_pdf_acc_theta, ctrl_ca1_x_acc_theta, ~, ~] = ...
     pdf_dir(ctrl_ca1_norm(:,7:9,:), n, nt1, nbins);
+[ctrl_cb1_pdf_acc_theta, ctrl_cb1_x_acc_theta, ~, ~] = ...
+    pdf_dir(ctrl_cb1_norm(:,7:9,:), n, nt1, nbins);
 
 %% Local descriptors
 % Average speed and variance per frame
-ctrl_vmag = pmean_mag(ctrl_ca1_norm(:,4:6,:), n, nt1);
-ctrl_vmag_var = pvar_mag(ctrl_ca1_norm(:,4:6,:), n, nt1);
+ctrl_ca1_vmag = pmean_mag(ctrl_ca1_norm(:,4:6,:), n, nt1);
+ctrl_ca1_vmag_var = pvar_mag(ctrl_ca1_norm(:,4:6,:), n, nt1);
 
 % Average direction per frame
-ctrl_vdir_stats = pmean_dir(ctrl_ca1_norm(:,4:6,:), n, nt1);
+ctrl_ca1_vdir_stats = pmean_dir(ctrl_ca1_norm(:,4:6,:), n, nt1);
 
 % Average acceleration magnitude per frame
-ctrl_amag = pmean_mag(ctrl_ca1_norm(:,7:9,:), n, nt1);
-ctrl_amag_var = pvar_mag(ctrl_ca1_norm(:,7:9,:), n, nt1);
+ctrl_ca1_amag = pmean_mag(ctrl_ca1_norm(:,7:9,:), n, nt1);
+ctrl_ca1_amag_var = pvar_mag(ctrl_ca1_norm(:,7:9,:), n, nt1);
 
 % Average acceleration direction per frame
-ctrl_adir_stats = pmean_dir(ctrl_ca1_norm(:,7:9,:), n, nt1);
+ctrl_ca1_adir_stats = pmean_dir(ctrl_ca1_norm(:,7:9,:), n, nt1);
 
 %% Statistical tests
 % Test if velocity components are random or not with 1% confidence. 
