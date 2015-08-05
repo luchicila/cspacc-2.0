@@ -5,23 +5,23 @@ prompt = 'Do you want to load freely moving tracks?';
                 [ca, n, nt, dt, dpath, file_name]  = load_tracks_single;
             end
 
-%first column is time.
-%second column is .....
-%thrid column is cell number
+%Have to call functions in different folders so add all these to the path now.
+addpath('graphlib','normlib','statslib')
+
+%first column is time
+%second column is position (x,y,'z')
+%third column is cell number
 
 %takes the x and y components of one cell track, increment the last digit by one
 %to change the cell number
 x = ca(:,:,1);
-%
+
 % %displacement of x and y
 % for cn = 1:n
-%
 %      for i = 2:nt
 %          xd(i,cn) = ca(i,1,cn) - ca(i-1,1,cn);
 %          yd(i,cn) = ca(i,1,cn) - ca(i-1,1,cn);
-%
 %      end
-%
 % end
 
 %function that normalizes to previous timepoint
@@ -50,62 +50,74 @@ vdir = compute_dir(ca_norm(:,4:6,:), n, nt1);
 adir = compute_dir(ca_norm(:,7:9,:), n, nt1);
 
 %magnitude needs to be checked...
-% %mean direction of normalized velocities
+%mean direction of normalized velocities
 vmean_dir = pmean_dir(ca_norm(:,4:6,:), n, nt1);
-%
-% %mean direction of normalized acceleration(s)
+
+%mean direction of normalized acceleration(s)
 amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt1);
 
 %mean x,y,z components of each timepoint
 for i = 1:nt1
-
     vmeanX(i) = mean(ca_norm(i,4,:));
     vmeanY(i) = mean(ca_norm(i,5,:));
 %   vmeanZ(i) = mean(ca_norm(i,6,:));
-
 end
-
 
 %mean x,y,z components of each timepoint
 for i = 1:nt1
-
     ameanX(i) = mean(ca_norm(i,7,:));
     ameanY(i) = mean(ca_norm(i,8,:));
 %   ameanZ(i) = mean(ca_norm(i,9,:));
-
 end
 
 %plot of average velocity vectors normaized to previous timepoints (every 60
 %seconds)
-
 figure
 for i = 1:nt1
-
   quiver(0,0,vmeanX(i),vmeanY(i))
-
 end
 
-  %legend('tp1','tp2','tp3','tp4','tp5','tp6','tp7')
-  %title('plot of mean velocity vectors at each timepoint - 1 min intervals')
-  xlim([-2 2])
-  ylim([-2 2])
+subplot(2,1,1)
+%shit fix until it's debugged properly (does pull V vectors)
+quiver(0,0,vmeanX(1),vmeanY(1));hold on;quiver(0,0,vmeanX(2),vmeanY(2));...
+quiver(0,0,vmeanX(3),vmeanY(3));quiver(0,0,vmeanX(4),vmeanY(4));...
+quiver(0,0,vmeanX(5),vmeanY(5));quiver(0,0,vmeanX(6),vmeanY(6));...
+quiver(0,0,vmeanX(7),vmeanY(7));hold off;
+
+%axis parameters and plot details go here
+legend('tp1','tp2','tp3','tp4','tp5','tp6','tp7')
+title('plot of mean velocity vectors at each timepoint - 1 min intervals')
+xlim([-2.5 2.5])
+ylim([-2.5 2.5])
 
 figure
-for i = 1:nt1
-
+for i = 1:length(nt1)
   quiver(0,0,ameanX(i),ameanY(i))
-
 end
 
-%legend('tp1','tp2','tp3','tp4','tp5','tp6','tp7')
-%title('plot of mean acceleration vectors at each timepoint - 1 min intervals')
-xlim([-6 6])
-ylim([-6 6])
+subplot(2,1,2)
+%shit fix until it's debugged properly (does pull V vectors)
+quiver(0,0,ameanX(1),ameanY(1));hold on;quiver(0,0,ameanX(2),ameanY(2));...
+quiver(0,0,ameanX(3),ameanY(3));quiver(0,0,ameanX(4),ameanY(4));...
+quiver(0,0,ameanX(5),ameanY(5));quiver(0,0,ameanX(6),ameanY(6));...
+quiver(0,0,ameanX(7),ameanY(7));hold off;
 
-%make folder with to store kinematics in a .csv
-%user chooses where the directory starts
+%axis parameters and plot details go here
+legend('tp1','tp2','tp3','tp4','tp5','tp6','tp7')
+title('plot of mean acceleration vectors at each timepoint - 1 min intervals')
+xlim([-5 5])
+ylim([-5 5])
 
-'need to make a direction folder...'
+%make folder to store data in a .csv
+% user chooses where the directory starts
+%need to make a direction folder...
 path2results = uigetdir
-fileName = 'velocity direction';
-save_direction(vdir, path2results, file_name)
+%name the file (something memorable/easy to find)
+fileName = 'Velocity Direction';
+save_direction(vdir, path2results, fileName)
+fileName = 'Acceleration Direction';
+save_direction(adir, path2results, fileName)
+fileName = 'Mean Vel Direction';
+save_direction(vmean_dir, path2results, fileName)
+fileName = 'Mean Acc Direction';
+save_direction(amean_dir, path2results, fileName)
