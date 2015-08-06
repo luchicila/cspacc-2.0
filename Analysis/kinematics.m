@@ -1,12 +1,51 @@
-%user go get the file. This file contains the formatted cell tracks.
-prompt = 'Do you want to load freely moving tracks?';
+%The main difference here is that you are able to select the cell track number
+%in the cmd line
+
+function kinematics()
+
+%Have to call functions in different folders so add all these to the path now.
+addpath('graphlib','normlib','statslib','Results');
+
+%user go get the file. This file contains the formatted cell movements.
+prompt = 'Do you want to load freely moving tracks? Y = 1';
             result = input(prompt);
             if result == 1;
                 [ca, n, nt, dt, dpath, file_name]  = load_tracks_single;
             end
+%Tells the user how many cell track there are
+A = 'Number of cells';
+disp(A)
+disp(n)
 
-%Have to call functions in different folders so add all these to the path now.
-addpath('graphlib','normlib','statslib','Results')
+prompt = 'Pick a cell (for the 1st cell track, enter 1)';
+          result = input(prompt);
+
+        if result == 1
+            x = ca(:,:,1);
+
+          elseif result == 2
+            x = ca(:,:,2);
+
+              elseif result == 3
+                x = ca(:,:,3);
+
+                elseif result == 4
+                  x = ca(:,:,4);
+
+                elseif result == 5
+                  x = ca(:,:,5);
+
+              elseif result == 6
+                x = ca(:,:,6);
+
+            elseif result == 7
+              x = ca(:,:,7);
+
+          elseif result == 8
+              x = ca(:,:,8);
+
+          end
+
 
 %first column is time
 %second column is position (x,y,'z')
@@ -14,7 +53,7 @@ addpath('graphlib','normlib','statslib','Results')
 
 %takes the x and y components of one cell track, increment the last digit by one
 %to change the cell number
-x = ca(:,:,1);
+%x = ca(:,:,1);
 
 % %displacement of x and y
 % for cn = 1:n
@@ -72,12 +111,11 @@ end
 
 %plot of average velocity vectors normaized to previous timepoints (every 60
 %seconds)
-% figure
+figure(1);
 % for i = 1:nt1
 %   quiver(0,0,vmeanX(i),vmeanY(i))
 % end
 
-% subplot(2,1,1)
 % fix until it's debugged properly (does pull V vectors)
 quiver(0,0,vmeanX(1),vmeanY(1));hold on;quiver(0,0,vmeanX(2),vmeanY(2));...
 quiver(0,0,vmeanX(3),vmeanY(3));quiver(0,0,vmeanX(4),vmeanY(4));...
@@ -90,12 +128,11 @@ title('Plot of mean velocity vectors at each timepoint - 1 min intervals')
 xlim([-2.5 2.5])
 ylim([-2.5 2.5])
 
-% figure
+figure(2);
 % for i = 1:length(nt1)
 %   quiver(0,0,ameanX(i),ameanY(i))
 % end
 
-% subplot(2,1,2)
 % fix until it's debugged properly (does pull V vectors)
 quiver(0,0,ameanX(1),ameanY(1));hold on;quiver(0,0,ameanX(2),ameanY(2));...
 quiver(0,0,ameanX(3),ameanY(3));quiver(0,0,ameanX(4),ameanY(4));...
@@ -108,10 +145,12 @@ title('Plot of mean acceleration vectors at each timepoint - 1 min intervals')
 xlim([-5 5])
 ylim([-5 5])
 
-%make folder to store data in a .csv
-% user chooses where the directory starts
-%need to make a direction folder...
+%make folder to store data in a .csv user chooses where the directory starts
+
+%ideally I'd like to set up a loop so specific cell types pipe into specific
+%folders
 path2results = uigetdir
+
 %name the file (something memorable/easy to find)
 fileName = 'Vel_Direction';
 save_direction(vdir, path2results, fileName)
@@ -121,3 +160,5 @@ fileName = 'Mean_Vel_Direction';
 save_direction(vmean_dir, path2results, fileName)
 fileName = 'Mean_Acc_Direction';
 save_direction(amean_dir, path2results, fileName)
+
+end
