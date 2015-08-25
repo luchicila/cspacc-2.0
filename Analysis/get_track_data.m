@@ -1,20 +1,22 @@
+%Have to call functions in different folders so add all these to the path now.
+addpath('graphlib','normlib','statslib','Results','iolib','Analysis')
+
+
 %user go get the file. This file contains the formatted cell tracks.
 prompt = 'Do you want to load freely moving tracks?';
             result = input(prompt);
             if result == 1;
                 [ca, n, nt, dt, dpath, file_name]  = load_tracks_single;
             end
-
-%Have to call functions in different folders so add all these to the path now.
-addpath('graphlib','normlib','statslib','Results')
-
-%first column is time
-%second column is position (x,y,'z')
-%third column is cell number
+%                                               ______
+%                                              /|    /
+%first column is time                         /_xyz_/|
+%second column is position (x,y,'z')        t | |__| /
+%third column is cell number                  |/___|/     c#
 
 %takes the x and y components of one cell track, increment the last digit by one
 %to change the cell number
-x = ca(:,:,1);
+%x = ca(:,:,1);
 
 % %displacement of x and y
 % for cn = 1:n
@@ -35,8 +37,7 @@ ca_norm = norm_vprev(ca, n, nt, dt);
 %computes velocity and acceleration with new time point modification.
 ca_norm = norm_vprev(ca_new, n, nt1, 60);
 
-%compute magnitude (speed) of normalized data (4:6 is where the velocity
-%is)
+%compute magnitude (speed) of normalized data (4:6 is where the velocity is)
 vmag = compute_mag(ca_norm(:,4:6,:), n, nt1);
 
 %compute magnitude (speed) of normalized data (7:9 is where the accelration
@@ -50,6 +51,7 @@ vdir = compute_dir(ca_norm(:,4:6,:), n, nt1);
 adir = compute_dir(ca_norm(:,7:9,:), n, nt1);
 
 %magnitude needs to be checked...
+
 %mean direction of normalized velocities
 vmean_dir = pmean_dir(ca_norm(:,4:6,:), n, nt1);
 
@@ -58,8 +60,8 @@ amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt1);
 
 %mean x,y,z components of each timepoint
 for i = 1:nt1
-    vmeanX(i) = mean(ca_norm(i,4,:));
-    vmeanY(i) = mean(ca_norm(i,5,:));
+    vmeanX(i) = mean(ca_norm(i,4,1));
+    vmeanY(i) = mean(ca_norm(i,5,1));
 %   vmeanZ(i) = mean(ca_norm(i,6,:));
 end
 
@@ -70,19 +72,14 @@ for i = 1:nt1
 %   ameanZ(i) = mean(ca_norm(i,9,:));
 end
 
-%plot of average velocity vectors normaized to previous timepoints (every 60
+%plot of average velocity vectors normalized to previous timepoints (every 60
 %seconds)
-% figure
-% for i = 1:nt1
-%   quiver(0,0,vmeanX(i),vmeanY(i))
-% end
-
-% subplot(2,1,1)
-% fix until it's debugged properly (does pull V vectors)
-quiver(0,0,vmeanX(1),vmeanY(1));hold on;quiver(0,0,vmeanX(2),vmeanY(2));...
-quiver(0,0,vmeanX(3),vmeanY(3));quiver(0,0,vmeanX(4),vmeanY(4));...
-quiver(0,0,vmeanX(5),vmeanY(5));quiver(0,0,vmeanX(6),vmeanY(6));...
-quiver(0,0,vmeanX(7),vmeanY(7));hold off;
+figure
+hold on
+for i = 1:nt1
+   quiver(0,0,vmeanX(i),vmeanY(i))
+end
+hold off
 
 %axis parameters and plot details go here
 legend('V tp1','V tp2','V tp3','V tp4','V tp5','V tp6','V tp7')
@@ -90,28 +87,24 @@ title('Plot of mean velocity vectors at each timepoint - 1 min intervals')
 xlim([-2.5 2.5])
 ylim([-2.5 2.5])
 
-% figure
-% for i = 1:length(nt1)
-%   quiver(0,0,ameanX(i),ameanY(i))
-% end
-
-% subplot(2,1,2)
-% fix until it's debugged properly (does pull V vectors)
-quiver(0,0,ameanX(1),ameanY(1));hold on;quiver(0,0,ameanX(2),ameanY(2));...
-quiver(0,0,ameanX(3),ameanY(3));quiver(0,0,ameanX(4),ameanY(4));...
-quiver(0,0,ameanX(5),ameanY(5));quiver(0,0,ameanX(6),ameanY(6));...
-quiver(0,0,ameanX(7),ameanY(7));hold off;
+figure
+hold on
+ for i = 1:nt1
+   quiver(0,0,ameanX(i),ameanY(i))
+ end
+hold off
 
 %axis parameters and plot details go here
 legend('A tp1','A tp2','A tp3','A tp4','A tp5','A tp6','A tp7')
 title('Plot of mean acceleration vectors at each timepoint - 1 min intervals')
-xlim([-5 5])
-ylim([-5 5])
+xlim([-4.5 4.5])
+ylim([-4.5 4.5])
+
 
 %make folder to store data in a .csv
 % user chooses where the directory starts
 %need to make a direction folder...
-path2results = uigetdir
+path2results = uigetdir;
 %name the file (something memorable/easy to find)
 fileName = 'Vel_Direction';
 save_direction(vdir, path2results, fileName)

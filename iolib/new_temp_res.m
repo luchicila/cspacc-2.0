@@ -1,17 +1,16 @@
 function [ca_new, nt1] = new_temp_res(ca, n, nt, dt, origin, new_origin)
 % Change temporal resolution by selecting data points every dt number of
-% frames surrounding a user specified origin. 
+% frames surrounding a user specified origin.
 % Input:
 %   ca = [nt x 9 x n] matrix with the (x, y, z) position of the cell.
 %   n = number of cells
 %   nt = maximum tracks length
-%   dt = time interval (in frames) at which to extract data. 
-%   origin = zero time point for the raw tracks (e.g. collision time
-%            point).
-%   new_origin = zero time point for the tracks at new temporal resolution. 
+%   dt = time interval (in frames) at which to extract data.
+%   origin = zero time point for the raw tracks (e.g. collision time point).
+%   new_origin = zero time point for the tracks at new temporal resolution.
 %
 % Output:
-%   ca_new = [nt x 9 x n] matrix with the (x, y, z) position of the cell at the 
+%   ca_new = [nt x 9 x n] matrix with the (x, y, z) position of the cell at the
 %            new temporal resolution.
 %   nt1 = new maximum number of tracks.
 %
