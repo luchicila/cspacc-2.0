@@ -1,3 +1,5 @@
+%This one works for steps of 1!
+
 % This will look at how aligned the vectors are. This ignores magnitude.
 % Velocity autocorrelation functions can be built from here.
 
@@ -10,59 +12,67 @@
 % if cos(theta)~=-1 then they are opposite (change in direction)
 
 
-% %xy angle to OX for first cell (the cell number will need to be changed)
+% xy angle to OX for first cell (the cell number will need to be changed)
 % Need differences between points (start and end points of path)
 % Get lengths of path x and y
 
 
 % need to use cell_norm to normalise cell direction to previous timepoints
 
-prompt = 'Enter the cell track number';
-            result = input(prompt);
-            j = result
+% prompt = 'Enter the cell track number';
+%             result = input(prompt);
+%             j = result
+%
+%             prompt = 'Enter the time step';
+%                         result = input(prompt);
+%                         t = result
 
-for i = 1:nt
-    %get path distance at each time point
+t = %%
+j = %%
+    % Get path distance at each time point
     X = diff(ca_norm(:,1,j)) ;
     Y = diff(ca_norm(:,2,j)) ;
 
-    %keep this as it could be useful
+    % Keep this as it could be useful
     Path = [X Y] ;
-    %split for sequential paths
-    p1 = X(1:2:end) ;
-    p2 = X(2:2:end) ;
-    p3 = Y(1:2:end) ;
-    p4 = Y(2:2:end) ;
 
-        %get magnitude of the path
-        for i = 1:length(p1)
+    % Split for sequential paths
+    p1 = X(1:t:end)
+    p2 = X(2:t:end)
+    p3 = Y(1:t:end)
+    p4 = Y(2:t:end)
 
+            % Get magnitude of the path (same as norm)
             A = sqrt(p1.^2 + p3.^2) ;
             B = sqrt(p2.^2 + p4.^2) ;
+            C = A.*B ;
 
-        end
-
-            %Dot Product
+                % Dot Product
             for i = 1:length(p1)
 
-                AdotB(i) = (p1(i)*(p2(i))) + (p3(i)*(p4(i))) ;
+                AdotB = ( p1 .* p2 ) + (p3 .* p4 ) ;
 
             end
 
-            %Apply the formula for cosine similarity
-        for i = 1:length(AdotB)
+            % Apply the formula for cosine similarity
 
-            cSim = AdotB'./(A .* B) ;
+            cSim = AdotB ./ C ;
 
-        end
 
-    S = round(cSim) ; %obviously rough and not appropriate for much
+        roundcSim = round(cSim) ; % pile of crap
+        meancSim = mean(cSim) ;
 
-end
 
-    figure
-    stem(cSim,'k') ;
+
+    stem(cSim,'g') ;
+    hold on
+
+    hold on
+    plot(cSim,':m')
+hold on
     xlim([0 20]) ; ylim([-2 2]) ; refline(0,0) ;refline(0,1) ;
+    m = meancSim; hline = refline([0 m]); hline.Color = 'r' ;
+    hline.LineStyle = '--' ;
 
 
 %TRY GENERALISE THE ABOVE (NO PROMPT)...

@@ -1,21 +1,21 @@
 % simple script to plot cell paths from origin
 % take cell paths split into X and Y paths (imageJ already does this)
-% get first XY value
 
 prompt = 'Enter the cell track number' ;
             result = input(prompt) ;
             j = result
 
-scalePathx = ca_norm(1,1,j) ;
-scalePathy = ca_norm(1,2,j) ;
+scalePathx = ca(1,1,j) ;
+scalePathy = ca(1,2,j) ;
 
 % subtract first XY value from all XY points
-for i = 1:length(ca_norm)
 
-    oX = ca_norm(:,1,j) - scalePathx ;
-    oY = ca_norm(:,2,j) - scalePathy ;
+    X0 = ca(:,1,j) - scalePathx ;
+    Y0 = ca(:,2,j) - scalePathy ;
 
-end
 
-hold on
-plot(oX , oY);
+       plot(X0 , Y0);
+
+       hold on
+       plot(X0(1),Y0(1),'or')
+       plot(X0(end),Y0(end),'or')

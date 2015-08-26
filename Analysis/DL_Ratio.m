@@ -7,11 +7,11 @@
 %             j = result
 
 
- j = 1
+ j = 1 ;
 
  for i = 1:n-1
 
-     j = j + 1
+     j = j + 1 ;
 
 % Compute D - the beeline length
 
@@ -26,7 +26,7 @@
 
 
      % Beeline length (D)
-     D = sqrt((xlE - xlS)^2 + (ylE - ylS)^2)
+     D = sqrt((xlE - xlS)^2 + (ylE - ylS)^2) ;
 
 % Compute L - the summed path length
 
@@ -38,10 +38,11 @@
      dY = diff(ca_norm(:,2,j)) ;
 
      % This is a summation of all time point lengths.
-     L = sum(sqrt(dX.^2 +dY.^2))
+     L = sum(sqrt(dX.^2 +dY.^2)) ;
 
 % Formula for the ratio. Where 1 is a perfectly straight path.
-     dirRat(j) = D / L
+     dirRat(j) = D / L ;
+     j = j + 1 ;
 
  end
 
@@ -64,3 +65,18 @@ figure(2)
      title('Directional Ratio')
      xlabel('Cell ID')
      ylabel('D/L')
+
+%%%%% Optional Plot %%%%%%
+figure(3)
+% Plot specific path
+     Origin_Plot
+     hold on
+
+% Plot start and end point markers
+     plot(X0(1),Y0(1),'or')
+     plot(X0(end),Y0(end),'or')
+
+% Sketch line between start and end points
+     hline = line([  oX(1) oX(end) ], [ oY(1) oY(end) ]);
+     hline.Color = 'k' ;
+     hline.LineStyle = ':' ;

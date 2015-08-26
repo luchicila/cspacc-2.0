@@ -32,16 +32,15 @@ ca_norm = norm_vprev(ca, n, nt, dt);
 %format its currently in is in 10 sec intervals. make it 60 secs (dt,
 %origin and new origin have been changed). when we are dealing with colliding
 %cells the origin and new origin will have to be modified from 1!
-[ca_new, nt1] = new_temp_res(ca, n, nt, 6, 1, 1);
+[ca_norm, nt1] = new_temp_res(ca, n, nt, 6, 1, 1);
 
 %computes velocity and acceleration with new time point modification.
-ca_norm = norm_vprev(ca_new, n, nt1, 60);
+ca_norm = norm_vprev(ca_norm, n, nt1, 60);
 
 %compute magnitude (speed) of normalized data (4:6 is where the velocity is)
 vmag = compute_mag(ca_norm(:,4:6,:), n, nt1);
 
-%compute magnitude (speed) of normalized data (7:9 is where the accelration
-%is)
+%compute magnitude (speed) of normalized data (7:9 is where the acceleration is)
 amag = compute_mag(ca_norm(:,7:9,:), n, nt1);
 
 %computes direction of velocity normalized to previous direction
