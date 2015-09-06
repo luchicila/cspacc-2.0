@@ -16,36 +16,8 @@
 % A = 'Number of cells';
 % disp(A)
 % disp(n)
-%
-% prompt = 'Pick a cell (for the 1st cell track, enter 1)';
-%           result = input(prompt);
-%
-%         if result == 1
-%             x = ca(:,:,1);
-%
-%           elseif result == 2
-%             x = ca(:,:,2);
-%
-%               elseif result == 3
-%                 x = ca(:,:,3);
-%
-%                 elseif result == 4
-%                   x = ca(:,:,4);
-%
-%                 elseif result == 5
-%                   x = ca(:,:,5);
-%
-%               elseif result == 6
-%                 x = ca(:,:,6);
-%
-%             elseif result == 7
-%               x = ca(:,:,7);
-%
-%           elseif result == 8
-%               x = ca(:,:,8);
-%
-%           end
-%
+
+
 % %first column is time
 % %second column is position (x,y,'z')
 % %third column is cell number

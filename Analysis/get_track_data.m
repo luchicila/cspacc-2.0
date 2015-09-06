@@ -1,13 +1,14 @@
+
 %Have to call functions in different folders so add all these to the path now.
 addpath('graphlib','normlib','statslib','Results','iolib','Analysis')
 
 
 %user go get the file. This file contains the formatted cell tracks.
-prompt = 'Do you want to load freely moving tracks?';
-            result = input(prompt);
-            if result == 1;
-                [ca, n, nt, dt, dpath, file_name]  = load_tracks_single;
-            end
+% prompt = 'Do you want to load freely moving tracks?';
+%             result = input(prompt);
+%             if result == 1;
+[ca, n, nt, dt, dpath, file_name]  = load_tracks_single;
+%             end
 %                                               ______
 %                                              /|    /
 %first column is time                         /_xyz_/|
@@ -27,53 +28,59 @@ prompt = 'Do you want to load freely moving tracks?';
 % end
 
 %function that normalizes to previous timepoint
-ca_norm = norm_vprev(ca, n, nt, dt);
+ca_norm = norm_vprev(ca, n, nt, dt) ;
 
 %format its currently in is in 10 sec intervals. make it 60 secs (dt,
 %origin and new origin have been changed). when we are dealing with colliding
 %cells the origin and new origin will have to be modified from 1!
-[ca_norm, nt1] = new_temp_res(ca, n, nt, 6, 1, 1);
+
+% when i use 60 second timepoints reistate nt as nt1
+
+
+% [ca_norm, nt1] = new_temp_res(ca, n, nt, 6, 1, 1) ;
 
 %computes velocity and acceleration with new time point modification.
-ca_norm = norm_vprev(ca_norm, n, nt1, 60);
+ca_norm = norm_vprev(ca_norm, n, nt, dt) ;
 
 %compute magnitude (speed) of normalized data (4:6 is where the velocity is)
-vmag = compute_mag(ca_norm(:,4:6,:), n, nt1);
+vmag = compute_mag(ca_norm(:,4:6,:), n, nt) ;
 
 %compute magnitude (speed) of normalized data (7:9 is where the acceleration is)
-amag = compute_mag(ca_norm(:,7:9,:), n, nt1);
+amag = compute_mag(ca_norm(:,7:9,:), n, nt) ;
 
 %computes direction of velocity normalized to previous direction
-vdir = compute_dir(ca_norm(:,4:6,:), n, nt1);
+vdir = compute_dir(ca_norm(:,4:6,:), n, nt) ;
 
 %computes direction of acceleration normalized to previous direction
-adir = compute_dir(ca_norm(:,7:9,:), n, nt1);
+adir = compute_dir(ca_norm(:,7:9,:), n, nt) ;
 
 %magnitude needs to be checked...
 
 %mean direction of normalized velocities
-vmean_dir = pmean_dir(ca_norm(:,4:6,:), n, nt1);
+vmean_dir = pmean_dir(ca_norm(:,4:6,:), n, nt) ;
 
 %mean direction of normalized acceleration(s)
-amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt1);
+amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt) ;
 
+% when i use 60 second timepoints reinstate nt as nt1
 %mean x,y,z components of each timepoint
-for i = 1:nt1
-    vmeanX(i) = mean(ca_norm(i,4,1));
-    vmeanY(i) = mean(ca_norm(i,5,1));
-%   vmeanZ(i) = mean(ca_norm(i,6,:));
+for i = 1:nt
+    vmeanX(i) = mean(ca_norm(i,4,1) ) ;
+    vmeanY(i) = mean(ca_norm(i,5,1) ) ;
+%   vmeanZ(i) = mean(ca_norm(i,6,:) ) ;
 end
 
 %mean x,y,z components of each timepoint
-for i = 1:nt1
-    ameanX(i) = mean(ca_norm(i,7,:));
-    ameanY(i) = mean(ca_norm(i,8,:));
-%   ameanZ(i) = mean(ca_norm(i,9,:));
+for i = 1:nt
+    ameanX(i) = mean(ca_norm(i,7,:) ) ;
+    ameanY(i) = mean(ca_norm(i,8,:) ) ;
+%   ameanZ(i) = mean(ca_norm(i,9,:) ) ;
 end
 
 %plot of average velocity vectors normalized to previous timepoints (every 60
 %seconds)
 figure
+
 hold on
 for i = 1:nt1
    quiver(0,0,vmeanX(i),vmeanY(i))
@@ -87,6 +94,7 @@ xlim([-2.5 2.5])
 ylim([-2.5 2.5])
 
 figure
+
 hold on
  for i = 1:nt1
    quiver(0,0,ameanX(i),ameanY(i))
@@ -99,17 +107,11 @@ title('Plot of mean acceleration vectors at each timepoint - 1 min intervals')
 xlim([-4.5 4.5])
 ylim([-4.5 4.5])
 
-
 %make folder to store data in a .csv
-% user chooses where the directory starts
+%user chooses where the directory starts
 %need to make a direction folder...
-path2results = uigetdir;
-%name the file (something memorable/easy to find)
-fileName = 'Vel_Direction';
-save_direction(vdir, path2results, fileName)
-fileName = 'Acc_Direction';
-save_direction(adir, path2results, fileName)
-fileName = 'Mean_Vel_Direction';
-save_direction(vmean_dir, path2results, fileName)
-fileName = 'Mean_Acc_Direction';
-save_direction(amean_dir, path2results, fileName)
+% %name the file (something memorable/easy to find)
+
+
+path2results = uigetdir() ;
+save_vec(vdir, path2results, file_name)

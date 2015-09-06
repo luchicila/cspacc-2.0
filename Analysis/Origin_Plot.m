@@ -1,21 +1,26 @@
-% simple script to plot cell paths from origin
-% take cell paths split into X and Y paths (imageJ already does this)
+function Origin_Plot(ca_norm, n)
 
-prompt = 'Enter the cell track number' ;
-            result = input(prompt) ;
-            j = result
+% Plot cell paths from common origin
+% Cell paths must be split into X and Y paths (imageJ already does this)
 
-scalePathx = ca(1,1,j) ;
-scalePathy = ca(1,2,j) ;
+% Input:
+%   ca_norm = [nt x 9 x n] matrix with the (x, y, z) position of the cell
+%   n = number of cells
 
-% subtract first XY value from all XY points
+% Output:
+%   Plot of cell tracks, stemming from common origin.
 
-    X0 = ca(:,1,j) - scalePathx ;
-    Y0 = ca(:,2,j) - scalePathy ;
+for cn = 1:n
+    scalePathx = ca_norm(1,1,cn) ;
+    scalePathy = ca_norm(1,2,cn) ;
+    % subtract first XY value from all XY points
+    X0 = ca_norm(:,1,cn) - scalePathx ;
+    Y0 = ca_norm(:,2,cn) - scalePathy ;
 
+    plot(X0 , Y0);
+    hold all
+    plot(X0(1),Y0(1),'or')
+    plot(X0(end),Y0(end),'or')
+end
 
-       plot(X0 , Y0);
-
-       hold on
-       plot(X0(1),Y0(1),'or')
-       plot(X0(end),Y0(end),'or')
+end

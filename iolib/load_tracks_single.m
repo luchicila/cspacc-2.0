@@ -1,9 +1,9 @@
 function [ca, n, nt, dt, dpath, file_name] = load_tracks_single()
-% Input user to select a file with the data and tehn load tracks of colliding 
-% cells from .csv file. Tracks file needs to be structured as the corresponding 
+% Input user to select a file with the data and then load tracks of colliding
+% cells from .csv file. Tracks file needs to be structured as the corresponding
 % tracks-template.xlsx.
 % Output:
-%   ca = nt x 9 x n matrix with the (x, y, z) position of cells. 
+%   ca = nt x 9 x n matrix with the (x, y, z) position of cells.
 %   n = number of cells.
 %   nt = maximum track length.
 %   dt = interval between timepoints (seconds).
@@ -17,7 +17,7 @@ function [ca, n, nt, dt, dpath, file_name] = load_tracks_single()
 % Extract number of pairs & number of frames.
 tmp = csvread(fullfile(dpath, file_name), 0, 0, 'A1..C1');
 n = tmp(1); % number of cells
-nt = tmp(2); % maximum length of tracks 
+nt = tmp(2); % maximum length of tracks
 dt = tmp(3); % interval between frames (seconds)
 clear tmp
 

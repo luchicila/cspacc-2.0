@@ -11,68 +11,47 @@
 % if cos(theta)~=0 then they are unrelated (approaching orthogonal)
 % if cos(theta)~=-1 then they are opposite (change in direction)
 
-
 % xy angle to OX for first cell (the cell number will need to be changed)
 % Need differences between points (start and end points of path)
 % Get lengths of path x and y
 
+% Need to use cell_norm to normalise cell direction to previous timepoints
+prompt = 'Enter the cell track number';
+result = input(prompt);
+j = result
 
-% need to use cell_norm to normalise cell direction to previous timepoints
-
-% prompt = 'Enter the cell track number';
-%             result = input(prompt);
-%             j = result
-%
-%             prompt = 'Enter the time step';
-%                         result = input(prompt);
-%                         t = result
-
-t = %%
-j = %%
-    % Get path distance at each time point
-    X = diff(ca_norm(:,1,j)) ;
-    Y = diff(ca_norm(:,2,j)) ;
-
-    % Keep this as it could be useful
-    Path = [X Y] ;
-
-    % Split for sequential paths
-    p1 = X(1:t:end)
-    p2 = X(2:t:end)
-    p3 = Y(1:t:end)
-    p4 = Y(2:t:end)
-
-            % Get magnitude of the path (same as norm)
-            A = sqrt(p1.^2 + p3.^2) ;
-            B = sqrt(p2.^2 + p4.^2) ;
-            C = A.*B ;
-
-                % Dot Product
-            for i = 1:length(p1)
-
-                AdotB = ( p1 .* p2 ) + (p3 .* p4 ) ;
-
-            end
-
-            % Apply the formula for cosine similarity
-
-            cSim = AdotB ./ C ;
+% Get path distance at each time point
+X = diff(ca_norm(:,1,j)) ;
+Y = diff(ca_norm(:,2,j)) ;
 
 
-        roundcSim = round(cSim) ; % pile of crap
-        meancSim = mean(cSim) ;
+% Split for sequential path
+p1 = X(1:2:end) ;
+p2 = X(2:2:end) ;
+p3 = Y(1:2:end) ;
+p4 = Y(2:2:end) ;
 
+% Get magnitude of the path (same as norm)
+A = sqrt(p1.^2 + p3.^2) ;
+B = sqrt(p2.^2 + p4.^2) ;
+C = A .* B ;
 
+% Dot Product
+AdotB = ( p1 .* p2 ) + (p3 .* p4 ) ;
 
-    stem(cSim,'g') ;
-    hold on
+% Apply the formula for cosine similarity
 
-    hold on
-    plot(cSim,':m')
+cSim = AdotB ./ C ;
+
+meancSim = mean(cSim) ;
+
+figure(1)
+stem(cSim,':b')
 hold on
-    xlim([0 20]) ; ylim([-2 2]) ; refline(0,0) ;refline(0,1) ;
-    m = meancSim; hline = refline([0 m]); hline.Color = 'r' ;
-    hline.LineStyle = '--' ;
-
-
-%TRY GENERALISE THE ABOVE (NO PROMPT)...
+plot(cSim,':r')
+xlim([0 20]) ; ylim([-1.5 1.5]) ; refline(0,0) ;refline(0,1) ;
+ylabel('cos(\theta)')
+xlabel('\Delta t')
+title('')
+m = meancSim; hline = refline([0 m]); hline.Color = 'm' ;
+hline.LineStyle = '--' ;
