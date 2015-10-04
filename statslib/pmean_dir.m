@@ -3,7 +3,7 @@ function vmean_dir = pmean_dir(vec, n, nt)
 % intervals. The mean direction is equivalent to the direction of the
 % resultant of the unit vectors from the sample.
 % Input:
-%   vec = [nt x 3 x n] matrix with the (x,y,z) components of the vecotors. 
+%   vec = [nt x 3 x n] matrix with the (x,y,z) components of the vectors. 
 %   n = number of vectors in the sample.
 %   nt = maximum number of time points.
 % 
@@ -25,7 +25,7 @@ for k = 1:nt
     % Find the unit vectors for every entry in the sample at current time
     % point.
     for i = 1:n
-        tmp(k,:,i) = tmp(k,:,i) / norm(tmp(k,:,i));
+        tmp(k,:,i) = tmp(k,:,i) / norm(tmp(k,:,i))
     end
     
     vx = sum(tmp(k,1,:)); % compute the x-component of the resultant vector.

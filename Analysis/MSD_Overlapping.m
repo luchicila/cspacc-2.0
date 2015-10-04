@@ -18,10 +18,19 @@ for s = 1:nt
             yd = ca(k + s,2,cn) - ca(k,2,cn) ;
             d(s, cn) = d(s) + xd^2 + yd^2 ;
         end
-        d(s, cn) = d(s, cn) / (nt - s + 1) ;
+        sd(s, cn) = d(s, cn) / (nt - s + 1) ;
     end
 end
-msd = mean(d') ;
-plot(log(1:nt-1), log(msd(1:end-1)))
+
+tau = 1:nt ;
+msd = mean(sd') ;
+plot(log(tau), log(msd)) ;
+xlabel('log(\tau)')
+ylabel('log(MSD)')
+
+
+errorbar(msd, std(d'))
+xlabel('log(\tau)')
+ylabel('log(MSD)')
 
 end

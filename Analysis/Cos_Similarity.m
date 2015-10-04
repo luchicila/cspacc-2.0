@@ -46,7 +46,7 @@ cSim = AdotB ./ C ;
 meancSim = mean(cSim) ;
 
 figure(1)
-stem(cSim,':b')
+stem(cSim,'b')
 hold on
 plot(cSim,':r')
 xlim([0 20]) ; ylim([-1.5 1.5]) ; refline(0,0) ;refline(0,1) ;

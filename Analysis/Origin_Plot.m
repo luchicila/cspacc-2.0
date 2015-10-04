@@ -1,4 +1,4 @@
-function Origin_Plot(ca_norm, n)
+function Origin_Plot(ca, n)
 
 % Plot cell paths from common origin
 % Cell paths must be split into X and Y paths (imageJ already does this)
@@ -11,11 +11,11 @@ function Origin_Plot(ca_norm, n)
 %   Plot of cell tracks, stemming from common origin.
 
 for cn = 1:n
-    scalePathx = ca_norm(1,1,cn) ;
-    scalePathy = ca_norm(1,2,cn) ;
+    scalePathx = ca(1,1,cn) ;
+    scalePathy = ca(1,2,cn) ;
     % subtract first XY value from all XY points
-    X0 = ca_norm(:,1,cn) - scalePathx ;
-    Y0 = ca_norm(:,2,cn) - scalePathy ;
+    X0 = ca(:,1,cn) - scalePathx ;
+    Y0 = ca(:,2,cn) - scalePathy ;
 
     plot(X0 , Y0);
     hold all

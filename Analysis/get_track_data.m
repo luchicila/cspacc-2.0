@@ -23,7 +23,7 @@ addpath('graphlib','normlib','statslib','Results','iolib','Analysis')
 % for cn = 1:n
 %      for i = 2:nt
 %          xd(i,cn) = ca(i,1,cn) - ca(i-1,1,cn);
-%          yd(i,cn) = ca(i,1,cn) - ca(i-1,1,cn);
+%          yd(i,cn) = ca(i,2,cn) - ca(i-1,2,cn);
 %      end
 % end
 
@@ -37,41 +37,41 @@ ca_norm = norm_vprev(ca, n, nt, dt) ;
 % when i use 60 second timepoints reistate nt as nt1
 
 
-% [ca_norm, nt1] = new_temp_res(ca, n, nt, 6, 1, 1) ;
+[ca_new, nt1] = new_temp_res(ca, n, nt, 6, 1, 1) ;
 
 %computes velocity and acceleration with new time point modification.
-ca_norm = norm_vprev(ca_norm, n, nt, dt) ;
+ca_norm = norm_vprev(ca_new, n, nt1, 60) ;
 
 %compute magnitude (speed) of normalized data (4:6 is where the velocity is)
-vmag = compute_mag(ca_norm(:,4:6,:), n, nt) ;
+vmag = compute_mag(ca_norm(:,4:6,:), n, nt1) ;
 
 %compute magnitude (speed) of normalized data (7:9 is where the acceleration is)
-amag = compute_mag(ca_norm(:,7:9,:), n, nt) ;
+amag = compute_mag(ca_norm(:,7:9,:), n, nt1) ;
 
 %computes direction of velocity normalized to previous direction
-vdir = compute_dir(ca_norm(:,4:6,:), n, nt) ;
+vdir = compute_dir(ca_norm(:,4:6,:), n, nt1) ;
 
 %computes direction of acceleration normalized to previous direction
-adir = compute_dir(ca_norm(:,7:9,:), n, nt) ;
+adir = compute_dir(ca_norm(:,7:9,:), n, nt1) ;
 
-%magnitude needs to be checked...
+%magnitude needs to be checked.
 
 %mean direction of normalized velocities
-vmean_dir = pmean_dir(ca_norm(:,4:6,:), n, nt) ;
+vmean_dir = pmean_dir(ca_norm(:,4:6,:), n, nt1) ;
 
 %mean direction of normalized acceleration(s)
-amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt) ;
+amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt1) ;
 
 % when i use 60 second timepoints reinstate nt as nt1
 %mean x,y,z components of each timepoint
-for i = 1:nt
+for i = 1:nt1
     vmeanX(i) = mean(ca_norm(i,4,1) ) ;
     vmeanY(i) = mean(ca_norm(i,5,1) ) ;
 %   vmeanZ(i) = mean(ca_norm(i,6,:) ) ;
 end
 
 %mean x,y,z components of each timepoint
-for i = 1:nt
+for i = 1:nt1
     ameanX(i) = mean(ca_norm(i,7,:) ) ;
     ameanY(i) = mean(ca_norm(i,8,:) ) ;
 %   ameanZ(i) = mean(ca_norm(i,9,:) ) ;
@@ -90,8 +90,8 @@ hold off
 %axis parameters and plot details go here
 legend('V tp1','V tp2','V tp3','V tp4','V tp5','V tp6','V tp7')
 title('Plot of mean velocity vectors at each timepoint - 1 min intervals')
-xlim([-2.5 2.5])
-ylim([-2.5 2.5])
+xlim([-2.5 5])
+ylim([-2.5 5])
 
 figure
 
@@ -104,14 +104,5 @@ hold off
 %axis parameters and plot details go here
 legend('A tp1','A tp2','A tp3','A tp4','A tp5','A tp6','A tp7')
 title('Plot of mean acceleration vectors at each timepoint - 1 min intervals')
-xlim([-4.5 4.5])
-ylim([-4.5 4.5])
-
-%make folder to store data in a .csv
-%user chooses where the directory starts
-%need to make a direction folder...
-% %name the file (something memorable/easy to find)
-
-
-path2results = uigetdir() ;
-save_vec(vdir, path2results, file_name)
+xlim([-2.5 5])
+ylim([-2.5 5])
