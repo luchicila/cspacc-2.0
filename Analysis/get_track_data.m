@@ -1,6 +1,8 @@
+function [ca,n,nt,dt,dpath,ca_norm,ca_new,nt1,vmag,amag,...
+          vdir,adir,vmean_dir,amean_dir] = Get_Track_Data
 
 %Have to call functions in different folders so add all these to the path now.
-addpath('graphlib','normlib','statslib','Results','iolib','Analysis')
+addpath('graphlib','normlib','statslib','iolib','Analysis')
 
 
 %user go get the file. This file contains the formatted cell tracks.
@@ -36,7 +38,6 @@ ca_norm = norm_vprev(ca, n, nt, dt) ;
 
 % when i use 60 second timepoints reistate nt as nt1
 
-
 [ca_new, nt1] = new_temp_res(ca, n, nt, 6, 1, 1) ;
 
 %computes velocity and acceleration with new time point modification.
@@ -67,42 +68,67 @@ amean_dir = pmean_dir(ca_norm(:,7:9,:), n, nt1) ;
 for i = 1:nt1
     vmeanX(i) = mean(ca_norm(i,4,1) ) ;
     vmeanY(i) = mean(ca_norm(i,5,1) ) ;
-%   vmeanZ(i) = mean(ca_norm(i,6,:) ) ;
+    %   vmeanZ(i) = mean(ca_norm(i,6,:) ) ;
 end
 
 %mean x,y,z components of each timepoint
 for i = 1:nt1
     ameanX(i) = mean(ca_norm(i,7,:) ) ;
     ameanY(i) = mean(ca_norm(i,8,:) ) ;
-%   ameanZ(i) = mean(ca_norm(i,9,:) ) ;
+    %   ameanZ(i) = mean(ca_norm(i,9,:) ) ;
 end
+
+% Simply plots all cell tracks from a point of common origin
+Origin_Plot(ca,n) ;
+
+% Provides the Overlapping Mean Squared Displacement of the cell tracks
+% and plots log-log, linear and errorbar graphs. User bias comes into play when
+% looking at the slope so lowest 10% is recommended.
+% Slope of 1 is random and a slope of 2 is perfectly directionally persistant
+MSD_Overlapping(ca,n,nt) ;
+
+% Directionality Ratio of the cell tracks. Plots the DR ensemble average with
+% and without errorbars
+DLR = DL_Ratio(ca,n,nt) ;
+
+% Directionality Ratio of the cell tracks. Plots stem graph of DR for each track
+% and a reference line for the mean D/L index
+DL_Ratio2(ca,n)
+
+% Provides the non-overlapping Mean Squared Displacement of the cell tracks,
+% our tracks aren't long enough so this won't be used (it can stay here...)
+MSD_NonOverlapping(ca,n,nt) ;
+
+% Cosine similarity is terrible atm but I'll go back to it and get it right...
 
 %plot of average velocity vectors normalized to previous timepoints (every 60
 %seconds)
-figure
-
+figure()
 hold on
 for i = 1:nt1
-   quiver(0,0,vmeanX(i),vmeanY(i))
+    quiver(0,0,vmeanX(i),vmeanY(i))
 end
 hold off
 
 %axis parameters and plot details go here
-legend('V tp1','V tp2','V tp3','V tp4','V tp5','V tp6','V tp7')
+str = cellstr(num2str((1:nt1)','Velocity @ t = %d')) ;
+legend(str,'Best')
 title('Plot of mean velocity vectors at each timepoint - 1 min intervals')
 xlim([-2.5 5])
 ylim([-2.5 5])
 
-figure
-
+figure()
 hold on
- for i = 1:nt1
-   quiver(0,0,ameanX(i),ameanY(i))
- end
+for i = 1:nt1
+    quiver(0,0,ameanX(i),ameanY(i))
+end
 hold off
 
 %axis parameters and plot details go here
-legend('A tp1','A tp2','A tp3','A tp4','A tp5','A tp6','A tp7')
+str = cellstr(num2str((1:nt1)','Acceleration @ t = %d')) ;
+legend(str,'Best')
 title('Plot of mean acceleration vectors at each timepoint - 1 min intervals')
 xlim([-2.5 5])
 ylim([-2.5 5])
+
+end

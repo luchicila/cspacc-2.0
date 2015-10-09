@@ -6,7 +6,7 @@ function ca_norm = norm_vprev(ca, n, nt, dt)
 %   ca = nt x 9 x n matrix with the (x, y, z) coordinates of the cells.
 %   n = number of cells.
 %   nt = maximum length of the tracks.
-%   dt = accuisition rate
+%   dt = acquisition rate
 
 % Output:
 %   ca_norm = nt x 9 x n matrix with the normalised velocity and

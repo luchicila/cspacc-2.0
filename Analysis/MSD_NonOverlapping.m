@@ -1,4 +1,4 @@
-function [msdNO] = MSD_NonOverlapping(ca, n, nt)
+function MSD_NonOverlapping(ca, n, nt)
 
 % Mean Squared Displacement Non Overlapping
 % Input:
@@ -7,7 +7,7 @@ function [msdNO] = MSD_NonOverlapping(ca, n, nt)
 %   nt = maximum tracks length
 
 % Output:
-%   msdNO = vector of length nt
+%   msdn = vector of length nt
 
 t = 1;
 
@@ -22,8 +22,12 @@ for t = 1:nt-1
             m = m + 1;
         end
     end
-    msdNO(t) = mean(sd);
+    msdn(t) = mean(sd);
 end
-plot(msd,'-or')
+
+plot(msdn,':o')
+title('Mean Squared Displacement Analysis - Non Overlapping')
+xlabel('Time')
+ylabel('MSD')
 
 end
