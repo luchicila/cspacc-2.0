@@ -1,8 +1,8 @@
-function [ca,n,nt,dt,dpath,ca_norm,ca_new,nt1,vmag,amag,...
-          vdir,adir,vmean_dir,amean_dir] = Get_Track_Data
+function [vdir, adir, vmag, amag] = Get_Track_Data ;
 
 %Have to call functions in different folders so add all these to the path now.
 addpath('graphlib','normlib','statslib','iolib','Analysis')
+
 
 
 %user go get the file. This file contains the formatted cell tracks.
@@ -11,6 +11,8 @@ addpath('graphlib','normlib','statslib','iolib','Analysis')
 %             if result == 1;
 [ca, n, nt, dt, dpath, file_name]  = load_tracks_single;
 %             end
+% saveFolder = uigetdir()
+
 %                                               ______
 %                                              /|    /
 %first column is time                         /_xyz_/|
@@ -89,7 +91,7 @@ MSD_Overlapping(ca,n,nt) ;
 
 % Directionality Ratio of the cell tracks. Plots the DR ensemble average with
 % and without errorbars
-DLR = DL_Ratio(ca,n,nt) ;
+DL_Ratio(ca,n,nt) ;
 
 % Directionality Ratio of the cell tracks. Plots stem graph of DR for each track
 % and a reference line for the mean D/L index
@@ -103,6 +105,9 @@ MSD_NonOverlapping(ca,n,nt) ;
 
 %plot of average velocity vectors normalized to previous timepoints (every 60
 %seconds)
+
+
+
 figure()
 hold on
 for i = 1:nt1
@@ -115,7 +120,7 @@ str = cellstr(num2str((1:nt1)','Velocity @ t = %d')) ;
 legend(str,'Best')
 title('Plot of mean velocity vectors at each timepoint - 1 min intervals')
 xlim([-2.5 5])
-ylim([-2.5 5])
+ylim([-5 5])
 
 figure()
 hold on
@@ -129,6 +134,6 @@ str = cellstr(num2str((1:nt1)','Acceleration @ t = %d')) ;
 legend(str,'Best')
 title('Plot of mean acceleration vectors at each timepoint - 1 min intervals')
 xlim([-2.5 5])
-ylim([-2.5 5])
+ylim([-5 5])
 
 end

@@ -25,9 +25,12 @@ for t = 1:nt-1
     msdn(t) = mean(sd);
 end
 
+figure()
 plot(msdn,':o')
 title('Mean Squared Displacement Analysis - Non Overlapping')
 xlabel('Time')
 ylabel('MSD')
+xlim([0 nt])
+ylim([0.25 0.55])
 
 end

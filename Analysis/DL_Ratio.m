@@ -34,19 +34,6 @@ DLR =  D./Path ;
 MDLR = mean(DLR') ;
 
 
-
-
-
-for i = 1:n
-
-        magx(i) = ca_norm( end ,1,i ) - ca_norm( 1,1,i ) ;
-        magy(i) = ca_norm( end ,2,i ) - ca_norm( 1,2,i ) ;
-
-end
-magD =  sqrt(magx.^2 + magy.^2) ;
-angleD = atan2(magy,magx) ; 
-
-
 % Plot with no errorbars of mean DLR
 % figure()
 % plot(MDLR,'b')
@@ -73,9 +60,8 @@ ylabel('Directionality Ratio')
 str = cellstr(num2str((1:n)' ,'Cell Track %d')) ;
 % xlim([0 50])
 legend(str,'Location','Best')
-title('< D/L >')
 
-% This plot shaded error bars using the 3rd party shaded error bar function.
+% This plots shaded error bars using the 3rd party shaded error bar function.
 % Optional!!
 errBar = std(DLR')/sqrt(n) ; plotX = [1:nt-1] ; plotY = MDLR ;
 figure()
@@ -83,7 +69,23 @@ shadedErrorBar(plotX,plotY,errBar)
 xlabel('Time')
 ylabel('Directionality Ratio')
 title('< D/L >')
-% this overlays the line so I can change the colour...
+% Overlays the line so I can change the colour...
 % hold on ; plot(MDLR, 'k') ;
+
+
+% Creates a 4 x 2 plot array (FIND A WAY TO CHANGE COLOURS OF PLOTS....)
+figure()
+% c = ['b', 'r', 'k', 'm', 'g', 'c', 'y', 'b'];
+for j = 1:n
+
+    subplot(4,2,j)
+    plot(DLR(:,j),'b') % Can be c(j) to loop through colour vector 'c'
+    str = cellstr(num2str((j)' ,'Cell Track %d')) ;
+    xlim([0 nt])
+    ylim([-0.2 1.2])
+    title(str)
+
+end
+
 
 end
