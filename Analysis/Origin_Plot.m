@@ -71,3 +71,25 @@ end
 
 
 end
+
+
+
+    scalePathx = ca(1,1,1) ;
+    scalePathy = ca(1,2,1) ;
+    % subtract first XY value from all XY points
+    X0 = ca(:,1,1) - scalePathx ;
+    Y0 = ca(:,2,1) - scalePathy ;
+
+    plot(X0,Y0);
+
+    hold on
+
+
+
+
+
+
+
+
+
+

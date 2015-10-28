@@ -1,4 +1,4 @@
-function [vdir, adir, vmag, amag] = Get_Track_Data ;
+function Get_Track_Data ;
 
 %Have to call functions in different folders so add all these to the path now.
 addpath('graphlib','normlib','statslib','iolib','Analysis')
@@ -52,7 +52,7 @@ vmag = compute_mag(ca_norm(:,4:6,:), n, nt1) ;
 amag = compute_mag(ca_norm(:,7:9,:), n, nt1) ;
 
 %computes direction of velocity normalized to previous direction
-vdir = compute_dir(ca_norm(:,4:6,:), n, nt1) ;
+vdir = compute_dir(ca_norm(:,4:6,:), n, nt) ;
 
 %computes direction of acceleration normalized to previous direction
 adir = compute_dir(ca_norm(:,7:9,:), n, nt1) ;

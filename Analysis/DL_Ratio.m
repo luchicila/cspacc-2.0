@@ -9,21 +9,22 @@ function DL_Ratio(ca_norm,n,nt) ;
 % Output:
 %   Plots of directionality ratio with and without error bars
 
+% The rate of decay of the curve tells you 
+% the cell's propensity for turning
+
 for i = 1:n
     for k = 1:(nt-1)
 
         % D => beeline distance
-        xd(k,i) = ca_norm( k + 1,1,i ) - ca_norm( 1,1,i ) ;
-        yd(k,i) = ca_norm( k + 1,2,i ) - ca_norm( 1,2,i ) ;
-
-        % L
-        xl(k,i) = ca_norm( k + 1,1,i ) - ca_norm( k,1,i ) ;
-        yl(k,i) = ca_norm( k + 1,2,i ) - ca_norm( k,2,i ) ;
-
+        xd(k,i) = ca_norm(k+1,1,i) - ca_norm(1,1,i) ;
+        yd(k,i) = ca_norm(k+1,2,i) - ca_norm(1,2,i) ;      
         D(k,i) = sqrt((xd(k,i).^2) + (yd(k,i).^2)) ;
 
-        L(k,i) = sqrt((xl(k,i).^2) + (yl(k,i).^2)) ;
+        % L => path length
+        xl(k,i) = ca_norm(k+1,1,i) - ca_norm(k,1,i) ;
+        yl(k,i) = ca_norm(k+1,2,i) - ca_norm(k,2,i) ;
 
+        L(k,i) = sqrt((xl(k,i).^2) + (yl(k,i).^2)) ;
         Path = cumsum(L) ;
 
     end
