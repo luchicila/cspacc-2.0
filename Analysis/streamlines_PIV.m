@@ -5,7 +5,7 @@
 % c = result
 
 %%
-% loads all images to be overlayed
+% loads all images to be overlayed (either stationary or moving tif files)
 TIF = uigetdir() ;
 imgFile = dir(fullfile(TIF, '*.tif')) ;
 
@@ -16,8 +16,8 @@ for i = 1:numel(imgFile) ;
     img{i} = I ;
 
 end
-
-% load all data files
+%%
+% load all data files (mat files of interpolated data)
 MAT = uigetdir() ;
 dataFile = dir(fullfile(MAT,'*.mat')) ;
 
@@ -32,15 +32,19 @@ for i = 1:numel(dataFile)
     matFile{i} = M ;
 
 end
+%%
+folder = uigetdir();
+
 
 %%
 % Compute streamlines
-Nt = length(dataFile) ;
+Nt = length(imgFile) ;
 n = 1 ;
 for k = 1:Nt-1
 
     X = matFile{n}.x_flow ;
     Y = matFile{n}.y_flow ;
+    W = sqrt(matFile{n}.x_flow.^2 + matFile{n}.y_flow.^2) ;
 
     % Convert to double precision
     I2 = im2double(img{n}) ;
@@ -89,30 +93,42 @@ for k = 1:Nt-1
     startx(startx==0) = nan ;
     starty(starty==0) = nan ;
 
-    % Arbitrarily chosen points
-    startx = [133 367] ;
-    starty = [282 180] ;
-
-  
-
     startx = reshape(startx, 1, size(startx,1)*size(startx,2)) ;
     starty = reshape(starty, 1, size(starty,1)*size(starty,2)) ;
 
+    % Arbitrarily chosen points
+    startx = [133 365] ;
+    starty = [283 180] ;
+
     xy = stream2(x,y,X,Y,startx,starty) ;
 
-    imshow(zImg)
+    imshow(zImg) ;
     hold on
-    h = streamline(xy) ;
-    sl = streamslice(x,y,X,Y) ;
 
-    set(h,'Color','c','LineStyle','-') ;
-    set(sl,'Color','m','LineStyle','-') ;
+    %     h = streamline(xy) ;
+    %     set(h,'Color','c','LineStyle','-') ;
+    %
+    %     sl = streamslice(x,y,X,Y) ;
+    %     set(sl,'Color','w','LineStyle','-') ;
+    %
+    [C,cn] = contour(x,y,W) ;
+    %         cn.ShowText = 'on' ;
+    %         cn.LineColor = 'flat' ;
+    
+    drawnow ;
 
-    % clear X Y startx starty
+    % Transform figure to an image
+    overlay = getframe(gcf) ;
+    %
+    %     % Specify the file where to write the overlayed image
+    imagePath = fullfile(folder, ...
+                ['frame-', num2str(1000 + n), '.tif']);
+    %
+    %     % Save overlayed image to file
+    imwrite(overlay.cdata, imagePath);
+    hold off
 
     n = n + 1 ;
 
-    drawnow ;
-    % clear X Y startx starty
 
 end
