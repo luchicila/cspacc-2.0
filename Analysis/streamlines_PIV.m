@@ -34,7 +34,6 @@ end
 %% This is where the overlaid images will get saved
 folder = uigetdir();
 
-
 %%
 % Compute streamlines
 Nt = length(imgFile) ;
@@ -43,7 +42,7 @@ for k = 1:Nt-1
     
     U = matFile{k}.x_flow ;
     V = matFile{k}.y_flow ;
-    W = sqrt(matFile{k}.x_flow.^2 + matFile{1}.y_flow.^2) ;
+    %   W = sqrt(matFile{k}.x_flow.^2 + matFile{1}.y_flow.^2) ;
     
     % Convert to double precision
     I2 = im2double(img{k}) ;
@@ -59,23 +58,22 @@ for k = 1:Nt-1
     % multiply to remove background (both need to be double precision)
     zImg = +eBW1 .* I2 ;
     
-    % find the edge of the object using canny algorithm
-    BW2 = edge(I2,'Canny') ;
-    % dilate
-    dBW2 = imdilate(BW2, SE) ;
-    % fill
-    fBW2 = imfill(dBW2, 4, 'holes') ;
-    % copy b&w (I might want the original..)
-    SE2 = strel('disk',15) ;
-    % erode
-    eBW2 = imerode(fBW2, SE2) ;
-    % get cell edge line
-    edgeSL = edge(eBW2,'Canny') ;
-    %     imshow(edgeSL)
-    [A, B] = find(edgeSL) ;
-    
+%     % find the edge of the object using canny algorithm
+%     BW2 = edge(I2,'Canny') ;
+%     % dilate
+%     dBW2 = imdilate(BW2, SE) ;
+%     % fill
+%     fBW2 = imfill(dBW2, 4, 'holes') ;
+%     % copy b&w (I might want the original..)
+%     SE2 = strel('disk',15) ;
+%     % erode
+%     eBW2 = imerode(fBW2, SE2) ;
+%     % get cell edge line
+%     edgeSL = edge(eBW2,'Canny') ;
+%     [A, B] = find(edgeSL) ;
+%     
     % Convert the grayscale image to RGB
-    Irgb = cat(3,zImg,zImg,zImg) ;
+    %     Irgb = cat(3,zImg,zImg,zImg) ;
     
     % create a coordinate grid the same size as the image to be overlayed
     [x, y] = meshgrid(1:1:512, 1:1:512) ;
@@ -83,26 +81,26 @@ for k = 1:Nt-1
     % A vector the length of the image in one dimension
     N = size(zImg,1);
     
-    % find where the zero values are (these are background)
-    %     k2 = 1;
-    %     for j = 1:N
-    %         k1 = 1;
-    %         for i = 1:N-1
-    %             if zImg(j,i) == 0 || zImg(j,i+1) ~= 0
-    %                 startx(k2,k1) = i+1;
-    %                 starty(k2,k1) = j;
-    %                 k1 = k1 + 1;
-    %             end
-    %         end
-    %         k2 = k2 + 1;
-    %     end
-    
-    %   stop any zeros from being start points
-    %   startx(startx==0) = nan ;
-    %   starty(starty==0) = nan ;
-    %
-    %   startx = reshape(startx, 1, size(startx,1)*size(startx,2)) ;
-    %   starty = reshape(starty, 1, size(starty,1)*size(starty,2)) ;
+        %     find where the zero values are (these are background)
+        k2 = 1;
+        for j = 1:N
+            k1 = 1;
+            for i = 1:N-1
+                if zImg(j,i) == 0 || zImg(j,i+1) ~= 0
+                    startx(k2,k1) = i+1;
+                    starty(k2,k1) = j;
+                    k1 = k1 + 1;
+                end
+            end
+            k2 = k2 + 1;
+        end
+%     
+%         % stop any zeros from being start points
+        startx(startx==0) = nan ;
+        starty(starty==0) = nan ;
+%     %
+         startx = reshape(startx, 1, size(startx,1)*size(startx,2)) ;
+         starty = reshape(starty, 1, size(starty,1)*size(starty,2)) ;
     
     %   Arbitrarily chosen points (these give a pair of points at opposing
     %   'sides' of the lamella
@@ -110,31 +108,34 @@ for k = 1:Nt-1
     %   starty = [283 180] ;
     
     %   Edge points at the start...
-    startx = B ;
-    starty = A ;
-    
+%      startx = B ;
+%     starty = A ;
+%     
     %   Compute the stream lines
-    xy = stream2(x,y,U,V,startx,starty) ;
+    xy = stream2(x,y,U,V,B,A) ;
     
     %   Show the images in sequence
-    imshow(I2) ;
+    imshow(zImg) ;
     hold on
     
+    % Plot end points and filters spurious points
     n = 1 ;
-    
     for i = 1:length(xy)
-        
         pos = xy{n} ;
         
-        P = plot(pos(end,1),pos(end,2),'o',...
-            'MarkerEdgeColor','m',...
-            'MarkerFaceColor','c',...
-            'MarkerSize', 12) ;
-        hold all
-        n = n + 1 ;
-        
+        pDiff1 = pos(end,1) - pos(1,1) ;
+        pDiff2 = pos(end,2) - pos(1,2) ;
+        m = [pDiff1 pDiff2] ;
+        if m(:,1) >= 25 || m(:,2) >= 25
+            
+            P = plot(pos(end,1),pos(end,2),'o',...
+                'MarkerEdgeColor','m',...
+                'MarkerFaceColor','c',...
+                'MarkerSize', 12) ;
+            hold all
+        end
+        n = n + 1 ; 
     end
-    
     
     %  imshow(Irgb)
     %  hold on
@@ -142,9 +143,9 @@ for k = 1:Nt-1
     %  Items that can be overlaid or plotted individually
     
     %  Streamlines Properties
-    %  sln = streamline(xy) ;
-    %  set(sln,'Color','g','LineStyle','-') ;
-    
+%             sln = streamline(xy) ;
+%             set(sln,'Color','c','LineStyle','-') ;
+%     
     %   Streamslice Properties
     %   slc = streamslice(x,y,X,Y) ;
     %   set(slc,'Color','g','LineStyle','-') ;
@@ -161,12 +162,13 @@ for k = 1:Nt-1
     
     %   Specify the file where to write the overlayed image (PNG format)
     imagePath = fullfile(folder, ...
-    ['frame-', num2str(1000 + k), '.png']);
+        ['frame-', num2str(1000 + k), '.png']);
     
     %   Save overlayed image to file
     imwrite(overlay.cdata, imagePath);
     
     hold off
+    
     
 end
 
