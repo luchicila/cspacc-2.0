@@ -1,4 +1,4 @@
-function Origin_Plot(ca,n)
+function Origin_Plot(ca, n)
 
 % Plot cell paths from common origin
 % Cell paths must be split into X and Y paths (imageJ already does this)
@@ -12,13 +12,13 @@ function Origin_Plot(ca,n)
 
 for i = 1:n
 
-    scalePathx = ca(1,1,i) ;
-    scalePathy = ca(1,2,i) ;
+    scale_path_x = ca(1, 1, i);
+    scale_path_y = ca(1, 2, i);
     % subtract first XY value from all XY points
-    X0 = ca(:,1,i) - scalePathx ;
-    Y0 = ca(:,2,i) - scalePathy ;
+    X0 = ca(:, 1, i) - scale_path_x;
+    Y0 = ca(:, 2, i) - scale_path_y;
 
-    plot(X0,Y0);
+    plot(X0, Y0);
 
     hold on
 
@@ -27,7 +27,7 @@ end
 ylim([-20 25])
 xlabel('x')
 ylabel('y')
-str = cellstr( num2str((1:n)','Cell Track %d') );
+str = cellstr(num2str((1:n)', 'Cell Track %d'));
 legend(str)
 title('Tracked Nuclei of Drosophila Embryonic Hemocytes')
 hold off
@@ -36,18 +36,18 @@ hold off
 % It always breaks.
 figure()
 for j = 1:n
-    subplot(4,2,j)
-    plot(ca(:,1,j),ca(:,2,j),'k')
-    str = cellstr(num2str((j)' ,'Cell Track %d')) ;
+    subplot(4, 2, j)
+    plot(ca(:, 1, j), ca(:, 2, j), 'k')
+    str = cellstr(num2str((j)', 'Cell Track %d')) ;
     title(str)
 
     hold all
 
-    subplot(4,2,j)
-    b = line( [  ca(1,1,j) ca(end,1,j) ] , ...
-        [ ca(1,2,j) ca(end,2,j) ] )
+    subplot(4, 2, j)
+    b = line([ca(1, 1, j) ca(end, 1, j)], ...
+            [ca(1, 2, j) ca(end, 2, j)])
     b.Color = 'blue'
-    str = cellstr(num2str((j)' ,'Cell Track %d')) ;
+    str = cellstr(num2str((j)', 'Cell Track %d')) ;
     title(str)
 end
 
@@ -74,7 +74,7 @@ end
 
 
 
-    scalePathx = ca(1,1,1) ;
+    scale_path_x = ca(1,1,1) ;
     scalePathy = ca(1,2,1) ;
     % subtract first XY value from all XY points
     X0 = ca(:,1,1) - scalePathx ;
@@ -83,13 +83,3 @@ end
     plot(X0,Y0);
 
     hold on
-
-
-
-
-
-
-
-
-
-

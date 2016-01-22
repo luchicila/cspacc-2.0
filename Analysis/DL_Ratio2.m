@@ -15,34 +15,34 @@ for i = 1:n
     % Compute D - the beeline length
     % This is the measured from the start point to the end point of the path
     % start and end point for X
-    xlS = ca(1,1,i) ;
-    xlE = ca(end,1,i) ;
+    x_start = ca(1, 1, i);
+    x_end = ca(end, 1, i);
     % start and end point for Y
-    ylS = ca(1,2,i) ;
-    ylE = ca(end,2,i) ;
+    y_start = ca(1, 2, i);
+    y_end = ca(end, 2, i);
     % Beeline length (D)
-    D = sqrt((xlE - xlS)^2 + (ylE - ylS)^2) ;
+    D = sqrt((x_end - x_start)^2 + (y_end - y_end)^2);
     % Compute L - the summed path length
     % Get path info at each time point
-    
+
     % Length of X 'path'
-    dX = diff(ca(:,1,i)) ;
+    dx = diff(ca(:, 1, i));
     % Length of Y 'path'
-    dY = diff(ca(:,2,i)) ;
+    dy = diff(ca(:, 2, i));
     % This is a summation of all time point lengths.
-    L = sum(sqrt(dX.^2 +dY.^2)) ;
+    L = sum(sqrt(dx.^2 + dy.^2));
     % Formula for the ratio. Where 1 is a perfectly straight path.
     DLR2(i) = D / L ;
 end
 
 figure()
-stem(DLR2,'ok')
-xlim([ 0.5 n+0.5 ])
+stem(DLR2, 'ok')
+xlim([0.5 (n + 0.5)])
 ylim([-0.5 1.5])
 meanDLR2 = mean(DLR2);
 hline1 = refline([0 meanDLR2]);
-hline1.Color = 'm' ; hline1.LineStyle = '-' ;
-hline2 = refline(0,1) ;
+hline1.Color = 'm'; hline1.LineStyle = '-';
+hline2 = refline(0, 1);
 hline2.Color = 'k' ; hline2.LineStyle = ':' ;
 
 title('D / L')
@@ -51,4 +51,3 @@ ylabel('Directionality Ratio')
 legend('D/L Value','Mean D/L Value')
 
 end
-
